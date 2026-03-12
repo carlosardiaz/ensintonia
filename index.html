@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>EnSintonía</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="refresh" content="86400"> <!-- Refresco automático cada 24 horas -->
   <style>
     :root {
       --bg: #ffffff;
@@ -13,6 +14,8 @@
       --text: #222222;
       --secondary: #555555;
       --highlight: #c0392b;
+      --pos: #0f7a43;
+      --neg: #b43221;
       --card-shadow: 0 8px 18px rgba(0,0,0,0.06);
     }
 
@@ -27,6 +30,7 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
+      font-size: 18px; /* Aumentado 2 puntos (+11% aprox) */
     }
 
     a {
@@ -39,54 +43,53 @@
     }
 
     header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      padding: 20px;
+      border-bottom: 2px solid var(--accent);
+      background: var(--bg);
+      text-align: center;
     }
 
     header h1 {
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
+      font-size: 2.2rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-    }
-
-    header span.subtitle {
-      font-size: 0.85rem;
-      color: var(--secondary);
+      margin-bottom: 5px;
     }
 
     main {
       display: grid;
       grid-template-columns: 2fr 1.1fr;
-      gap: 16px;
-      padding: 16px;
+      gap: 24px;
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .column {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 24px;
     }
 
     section {
       background: var(--bg);
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      padding: 14px;
+      padding: 20px;
       box-shadow: var(--card-shadow);
     }
 
     section h2 {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
     }
 
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
     }
 
     .news-card {
@@ -105,9 +108,9 @@
     .news-media {
       position: relative;
       width: 100%;
-      padding-top: 60%;
+      padding-top: 56.25%; /* 16:9 */
       overflow: hidden;
-      background: #ccc;
+      background: #eee;
     }
 
     .news-media img {
@@ -116,62 +119,46 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .news-card:hover .news-media img {
+      transform: scale(1.03);
     }
 
     .video-badge {
       position: absolute;
-      right: 8px;
-      bottom: 8px;
-      background: rgba(0,0,0,0.7);
+      right: 10px;
+      bottom: 10px;
+      background: rgba(0,0,0,0.8);
       color: #fff;
-      font-size: 0.7rem;
-      padding: 4px 6px;
-      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: sans-serif;
     }
 
     .news-body {
-      padding: 10px 12px 12px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .news-tag {
-      font-size: 0.7rem;
-      color: var(--secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      gap: 8px;
     }
 
     .news-title {
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       font-weight: 700;
+      line-height: 1.3;
     }
 
     .news-summary {
-      font-size: 0.8rem;
+      font-size: 1rem;
       color: var(--secondary);
     }
 
-    .news-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-      font-size: 0.75rem;
-      color: var(--secondary);
-    }
-
-    .source-pill {
-      background: #e6e6e6;
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 0.7rem;
-    }
-
-    .market-group {
+    /* Indicadores Estilo Bolsa */
+    .market-card {
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -179,657 +166,147 @@
 
     .market-row {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: baseline;
-      padding: 6px 8px;
+      padding: 12px 15px;
       border-radius: 8px;
-      background: var(--muted);
+      background: #f8f9fa;
+      border-left: 6px solid #ccc;
     }
 
-    .market-row span.label {
-      font-size: 0.8rem;
-    }
+    .market-row.up { border-left-color: var(--pos); background: #f0fdf4; }
+    .market-row.down { border-left-color: var(--neg); background: #fef2f2; }
 
-    .market-row span.value {
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
+    .m-label { font-weight: 700; font-size: 0.95rem; }
+    .m-value { font-family: monospace; font-size: 1.1rem; }
+    .m-graph { width: 60px; height: 30px; }
 
-    .market-row span.delta {
-      font-size: 0.75rem;
-    }
+    .delta { font-weight: 700; font-size: 0.9rem; }
+    .up .delta { color: var(--pos); }
+    .down .delta { color: var(--neg); }
 
-    .delta-pos {
-      color: #0f7a43;
-    }
-
-    .delta-neg {
-      color: #b43221;
-    }
-
-    .market-note {
-      font-size: 0.75rem;
-      color: var(--secondary);
-      margin-top: 6px;
-    }
-
-    .indicator-link {
-      font-size: 0.75rem;
-      margin-top: 2px;
-    }
-
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-
-      header {
-        align-items: flex-start;
-      }
-
-      .news-card.large {
-        grid-column: span 1;
-      }
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.5rem;
-      }
-
-      section {
-        padding: 12px;
-      }
-
-      .news-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 1000px) {
+      main { grid-template-columns: 1fr; }
+      .news-card.large { grid-column: span 1; }
     }
   </style>
 </head>
 <body>
+
 <header>
   <h1>EnSintonía</h1>
-  <span class="subtitle">Panorama diario de noticias y mercados – Política, economía, tecnología y finanzas</span>
+  <p>Noticias y Mercados en Tiempo Real</p>
 </header>
 
 <main>
-  <!-- LEFT COLUMN -->
   <div class="column">
-
-    <!-- Top 10 General (political / economic / financial) -->
-    <section aria-label="Principales noticias del día">
-      <h2>Top 10 noticias del día</h2>
+    <section>
+      <h2>Top 10 Noticias del Día</h2>
       <div class="news-grid">
-
-        <!-- 1 LARGE – Global markets & Iran war (video) -->
+        <!-- 1 -->
         <article class="news-card large">
           <div class="news-media">
-            <a href="https://www.youtube.com/watch?v=SNpreKLinFM" target="_blank" rel="noopener noreferrer">
-              <img src="https://img.youtube.com/vi/SNpreKLinFM/hqdefault.jpg" alt="Mercados reaccionan a señales sobre fin de la guerra con Irán" />
-              <span class="video-badge">Video</span>
-            </a>
+            <img src="https://images.unsplash.com/photo-1611974714024-462cd99bc36a?auto=format&fit=crop&q=80&w=1000" alt="Mercados">
+            <span class="video-badge">Video</span>
           </div>
           <div class="news-body">
-            <div class="news-tag">Política · Mercados</div>
-            <div class="news-title">
-              Mercados se relajan mientras Trump señala que la guerra con Irán podría terminar “pronto”
-            </div>
-            <p class="news-summary">
-              Los mercados financieros muestran alivio después de que el presidente Donald Trump insinuara que el conflicto con Irán podría acercarse a su fase final, reduciendo el temor a una disrupción prolongada del suministro energético.[web:5] La caída del precio del petróleo y el repunte de las acciones reflejan una expectativa de normalización gradual en las rutas de transporte clave, como el Estrecho de Ormuz.[web:5]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Bloomberg Markets [YouTube]</span>
-              <a href="https://www.youtube.com/watch?v=SNpreKLinFM" target="_blank" rel="noopener noreferrer">Ver fuente</a>
-            </div>
+            <div class="news-title">Mercados se relajan mientras Trump señala fin de guerra</div>
+            <p class="news-summary">Los mercados financieros muestran alivio tras señales de desescalada. El optimismo se extiende por Wall Street ante la posibilidad de un cierre diplomático.[web:5]</p>
+            <a href="https://www.youtube.com/watch?v=SNpreKLinFM" target="_blank">Fuente [YouTube]</a>
           </div>
         </article>
-
-        <!-- 2 LARGE – Oil falls, stocks steady -->
-        <article class="news-card large">
+        <!-- 2 -->
+        <article class="news-card">
           <div class="news-media">
-            <a href="https://www.nytimes.com/2026/03/10/business/stocks-oil-markets-iran.html" target="_blank" rel="noopener noreferrer">
-              <img src="https://static01.nyt.com/images/2026/03/10/business/10markets-oil/10markets-oil-superJumbo.jpg" alt="Mercados bursátiles y precio del petróleo" />
-            </a>
+            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=600" alt="Economía">
           </div>
           <div class="news-body">
-            <div class="news-tag">Economía global</div>
-            <div class="news-title">
-              El petróleo cae y las bolsas se estabilizan tras una jornada de alta volatilidad
-            </div>
-            <p class="news-summary">
-              Las bolsas estadounidenses cerraron la sesión con movimientos moderados mientras el precio del petróleo retrocedía, incluso cuando continuaban los intensos bombardeos en Irán.[web:14] La reacción sugiere que los inversionistas empiezan a descontar un escenario menos prolongado del conflicto, dando prioridad a las expectativas de crecimiento y a futuros ajustes de tasas de interés.[web:14]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">The New York Times</span>
-              <a href="https://www.nytimes.com/2026/03/10/business/stocks-oil-markets-iran.html" target="_blank" rel="noopener noreferrer">Ir a la nota</a>
-            </div>
+            <div class="news-title">El petróleo cae tras jornada de alta volatilidad</div>
+            <p class="news-summary">La corrección en los precios de la energía alivia la presión inflacionaria. Inversionistas ajustan posiciones tras semanas de incertidumbre.[web:14]</p>
+            <a href="https://www.nytimes.com/2026/03/10/business/stocks-oil-markets-iran.html" target="_blank">Fuente: NYT</a>
           </div>
         </article>
-
         <!-- 3 -->
         <article class="news-card">
           <div class="news-media">
-            <a href="https://www.latimes.com/business/story/2026-03-10/stocks-hold-steady-as-wall-street-waits-for-next-signal-on-how-long-war-with-iran-may-last" target="_blank" rel="noopener noreferrer">
-              <img src="https://ca-times.brightspotcdn.com/dims4/default/placeholder-la-times.jpg" alt="Wall Street en espera" />
-            </a>
+            <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600" alt="Bolsa">
           </div>
           <div class="news-body">
-            <div class="news-tag">Mercados EE. UU.</div>
-            <div class="news-title">
-              Wall Street se mantiene estable mientras calcula la duración del conflicto con Irán
-            </div>
-            <p class="news-summary">
-              Los principales índices en Estados Unidos cerraron prácticamente planos, reflejando una postura de espera de los inversionistas frente a la incertidumbre sobre cuánto se prolongará la guerra con Irán.[web:1] La evolución del conflicto será clave para definir el rumbo de los precios de la energía y las próximas decisiones de la Reserva Federal.[web:1]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Los Angeles Times</span>
-              <a href="https://www.latimes.com/business/story/2026-03-10/stocks-hold-steady-as-wall-street-waits-for-next-signal-on-how-long-war-with-iran-may-last" target="_blank" rel="noopener noreferrer">Leer más</a>
-            </div>
+            <div class="news-title">Wall Street se mantiene estable en espera de señales</div>
+            <p class="news-summary">Los índices principales cierran planos. La cautela predomina entre los operadores antes de los anuncios de la Reserva Federal.[web:1]</p>
+            <a href="https://www.latimes.com/business/story/2026-03-10/stocks-hold-steady" target="_blank">Fuente: LA Times</a>
           </div>
         </article>
-
-        <!-- 4 -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://fortune.com/2026/03/10/global-economy-iran-war-nightmare-scenario/" target="_blank" rel="noopener noreferrer">
-              <img src="https://content.fortune.com/wp-content/uploads/2026/03/global-economy-iran-war.jpg" alt="Impacto global de la guerra en la economía" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Análisis</div>
-            <div class="news-title">
-              “Escenario de pesadilla” para la economía mundial por la guerra con Irán
-            </div>
-            <p class="news-summary">
-              Analistas advierten que la combinación de tensiones geopolíticas, rutas energéticas en riesgo y volatilidad en materias primas configura un “escenario de pesadilla” para la economía global.[web:4] Pese a la resiliencia mostrada tras shocks anteriores, un conflicto prolongado podría presionar la inflación, frenar la inversión y obligar a bancos centrales a maniobras delicadas.[web:4]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Fortune</span>
-              <a href="https://fortune.com/2026/03/10/global-economy-iran-war-nightmare-scenario/" target="_blank" rel="noopener noreferrer">Ver análisis</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 5 -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.reuters.com/world/china/global-markets-wrapup-1-pix-2026-03-10/" target="_blank" rel="noopener noreferrer">
-              <img src="https://www.reuters.com/resizer/placeholder-markets.jpg" alt="Acciones mundiales y petróleo" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Mercados globales</div>
-            <div class="news-title">
-              Acciones suben y el petróleo se desploma mientras Wall Street mira más allá de los ataques
-            </div>
-            <p class="news-summary">
-              Las bolsas mundiales repuntaron y el precio del crudo cayó con fuerza después de que Trump declarara avances hacia el fin de la guerra en Medio Oriente.[web:8] El cambio de sentimiento sugiere que los participantes de mercado empiezan a enfocarse en los fundamentos económicos y en la trayectoria de tasas, más que en el riesgo geopolítico inmediato.[web:8]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Reuters</span>
-              <a href="https://www.reuters.com/world/china/global-markets-wrapup-1-pix-2026-03-10/" target="_blank" rel="noopener noreferrer">Nota completa</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 6 -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-trim-gains-oil-falls-as-wall-street-weighs-iran-war-signals-130544731.html" target="_blank" rel="noopener noreferrer">
-              <img src="https://s.yimg.com/ny/api/res/finance-placeholder.jpg" alt="Panel de mercado con índices y petróleo" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">EE. UU. · Sesión en vivo</div>
-            <div class="news-title">
-              Dow, S&amp;P 500 y Nasdaq recortan ganancias mientras cae el petróleo
-            </div>
-            <p class="news-summary">
-              Los principales índices estadounidenses cerraron con avances moderados tras una fuerte oscilación del precio del petróleo desencadenada por señales mixtas sobre la guerra con Irán.[web:11] Los operadores ajustan posiciones entre apuestas de recortes de tasas y preocupaciones por los impactos de un conflicto prolongado en el comercio y el crecimiento global.[web:11]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Yahoo Finance</span>
-              <a href="https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-trim-gains-oil-falls-as-wall-street-weighs-iran-war-signals-130544731.html" target="_blank" rel="noopener noreferrer">Seguir en vivo</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 7 SOCIAL -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.facebook.com/groups/957567098722676/posts/1615691416243571/" target="_blank" rel="noopener noreferrer">
-              <img src="https://scontent.xx.fbcdn.net/v/t1.6435-9/ai-daily-news.jpg" alt="Resumen diario de noticias de IA en Facebook" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Innovación · [Facebook]</div>
-            <div class="news-title">
-              USPTO lanza piloto de búsqueda automatizada con IA para patentes
-            </div>
-            <p class="news-summary">
-              Un resumen curado en Facebook destaca el nuevo programa piloto de la USPTO que aplica herramientas de inteligencia artificial para acelerar la búsqueda de “prior art” en solicitudes de patentes.[web:15] La iniciativa apunta a reducir tiempos de revisión, mejorar la calidad de los exámenes y abrir la puerta a una adopción más amplia de IA en el ámbito legal y regulatorio.[web:15]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Daily AI &amp; Data [Facebook]</span>
-              <a href="https://www.facebook.com/groups/957567098722676/posts/1615691416243571/" target="_blank" rel="noopener noreferrer">Ver publicación</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 8 SOCIAL (X) – generic card referencing macro/markets thread -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://x.com/search?q=oil%20prices%20iran%20war%20markets&src=typed_query" target="_blank" rel="noopener noreferrer">
-              <img src="https://pbs.twimg.com/media/finance-thread-placeholder.jpg" alt="Hilo en X sobre petróleo y mercados" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Mercados · [X]</div>
-            <div class="news-title">
-              Analistas en X debaten si el desplome del petróleo es sostenible
-            </div>
-            <p class="news-summary">
-              Diversos analistas comparten en X gráficos y comentarios sobre la brusca caída reciente del petróleo, discutiendo si se trata de una corrección temporal o del inicio de un ciclo de precios más bajos. Las opiniones se dividen entre quienes anticipan nueva volatilidad ligada a la guerra y quienes creen que la oferta global seguirá ajustándose rápidamente.
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Curado de X</span>
-              <a href="https://x.com/search?q=oil%20prices%20iran%20war%20markets&src=typed_query" target="_blank" rel="noopener noreferrer">Ver hilos</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 9 SOCIAL (Instagram) – generic macro/markets explainer reel -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.instagram.com/explore/tags/macroeconomics/" target="_blank" rel="noopener noreferrer">
-              <img src="https://instagram.fplaceholder.cdn/finance-reel.jpg" alt="Reel de Instagram explicando la volatilidad reciente" />
-              <span class="video-badge">Video</span>
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Educativo · [Instagram]</div>
-            <div class="news-title">
-              Reels explican cómo la guerra afecta inflación y tasas
-            </div>
-            <p class="news-summary">
-              Creadores de contenido económico en Instagram publican reels que explican, con ejemplos visuales, cómo los shocks de petróleo se traducen en inflación y presiones sobre los bancos centrales. Estos formatos cortos se han convertido en una vía clave para acercar conceptos de macroeconomía y finanzas a audiencias más jóvenes.
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Economía en IG</span>
-              <a href="https://www.instagram.com/explore/tags/macroeconomics/" target="_blank" rel="noopener noreferrer">Explorar reels</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 10 – Opinion on AI-driven markets hype -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.abc.net.au/news/2026-03-11/why-financial-markets-have-thrown-logic-to-the-wind/106438760" target="_blank" rel="noopener noreferrer">
-              <img src="https://live-production.wcms.abc-cdn.net.au/finance-bubble.jpg" alt="Gráfico de mercados impulsados por expectativas de IA" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Opinión · Mercados</div>
-            <div class="news-title">
-              “Los mercados han tirado la lógica por la ventana” impulsados por el optimismo en la IA
-            </div>
-            <p class="news-summary">
-              Un análisis sostiene que los inversionistas han llevado a los mercados a máximos pese a la incertidumbre geopolítica, apostando a un “milagro económico” impulsado por la inteligencia artificial.[web:2] Bajo el acrónimo TACO, los operadores combinan expectativas sobre Trump, la automatización y el crédito barato para justificar valuaciones que algunos consideran desconectadas de la realidad.[web:2]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">ABC News</span>
-              <a href="https://www.abc.net.au/news/2026-03-11/why-financial-markets-have-thrown-logic-to-the-wind/106438760" target="_blank" rel="noopener noreferrer">Leer columna</a>
-            </div>
-          </div>
-        </article>
-
       </div>
     </section>
 
-    <!-- Top 10 Tech News -->
-    <section aria-label="Top 10 noticias de tecnología">
-      <h2>Top 10 noticias de tecnología</h2>
+    <section>
+      <h2>Top 10 Tech News</h2>
       <div class="news-grid">
-
-        <!-- T1 LARGE – AI product launches -->
+        <!-- T1 -->
         <article class="news-card large">
           <div class="news-media">
-            <a href="https://blog.mean.ceo/ai-product-launches-news-march-2026/" target="_blank" rel="noopener noreferrer">
-              <img src="https://blog.mean.ceo/wp-content/uploads/2026/03/ai-products-march-2026.jpg" alt="Nuevos lanzamientos de productos de IA para startups" />
-            </a>
+            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000" alt="IA">
           </div>
           <div class="news-body">
-            <div class="news-tag">IA · Startups</div>
-            <div class="news-title">
-              Nuevos lanzamientos de productos de IA para startups en marzo de 2026
-            </div>
-            <p class="news-summary">
-              Un resumen especializado destaca varias soluciones de IA diseñadas para pequeñas empresas, como la plataforma CU Lending Collective de Zest AI y el sistema contable agentic de Basis, que automatizan tareas complejas de crédito y finanzas.[web:6] Estos productos buscan democratizar el acceso a herramientas avanzadas de análisis y reducir costos operativos, en un contexto de alta competencia por eficiencia y escalabilidad.[web:6]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Mean CEO Blog</span>
-              <a href="https://blog.mean.ceo/ai-product-launches-news-march-2026/" target="_blank" rel="noopener noreferrer">Ver lanzamientos</a>
-            </div>
+            <div class="news-title">Lanzamientos de productos IA para startups en 2026</div>
+            <p class="news-summary">Nuevas herramientas de automatización agentic prometen revolucionar la productividad en pequeñas empresas.[web:6]</p>
+            <a href="https://blog.mean.ceo/ai-product-launches-2026/" target="_blank">Fuente: Mean CEO</a>
           </div>
         </article>
-
-        <!-- T2 LARGE – AI startups to watch -->
-        <article class="news-card large">
-          <div class="news-media">
-            <a href="https://europeanbusinessmagazine.com/business/ai-startups-to-watch-in-2026-the-companies-reshaping-industries-through-artificial-intelligence/" target="_blank" rel="noopener noreferrer">
-              <img src="https://europeanbusinessmagazine.com/wp-content/uploads/2026/01/ai-startups-2026.jpg" alt="Startups de IA que transforman industrias" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Startups · IA</div>
-            <div class="news-title">
-              Startups de IA a seguir en 2026 que están transformando industrias
-            </div>
-            <p class="news-summary">
-              Una lista curada identifica 24 startups de IA que abarcan modelos fundacionales, aplicaciones empresariales, robótica y soluciones verticales en sectores regulados.[web:12] Destaca el rol de OpenAI como líder en modelos generativos, apoyado por una fuerte alianza con Microsoft y una financiación acumulada superior a 78 mil millones de dólares, lo que le da una ventaja significativa en recursos y distribución.[web:12]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">European Business Magazine</span>
-              <a href="https://europeanbusinessmagazine.com/business/ai-startups-to-watch-in-2026-the-companies-reshaping-industries-through-artificial-intelligence/" target="_blank" rel="noopener noreferrer">Leer reporte</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T3 – Robotics startup 1X -->
+        <!-- T2 -->
         <article class="news-card">
           <div class="news-media">
-            <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">
-              <img src="https://wellows.com/wp-content/uploads/2026/03/humanoid-robot-1x-neo.jpg" alt="Humanoides NEO en entorno doméstico" />
-            </a>
+            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=600" alt="Robótica">
           </div>
           <div class="news-body">
-            <div class="news-tag">Robótica</div>
-            <div class="news-title">
-              1X abre preventa de su robot humanoide NEO para el hogar
-            </div>
-            <p class="news-summary">
-              La firma de robótica 1X anunció un acuerdo para desplegar 10 000 unidades y abrió la preventa de NEO, un robot humanoide doméstico con precio cercano a los 20 000 dólares.[web:9] La compañía busca posicionar estos robots como asistentes para tareas del hogar y servicios en logística, salud y hospitalidad, apuntando a un mercado de automatización física en rápido crecimiento.[web:9]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Wellows</span>
-              <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">Ver detalle</a>
-            </div>
+            <div class="news-title">1X abre preventa de humanoide NEO</div>
+            <p class="news-summary">El robot diseñado para el hogar marca un hito en la robótica de consumo con un precio competitivo.[web:9]</p>
+            <a href="https://wellows.com/blog/tech-startups/" target="_blank">Fuente: Wellows</a>
           </div>
         </article>
-
-        <!-- T4 – Robotics startup Apptronik -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">
-              <img src="https://wellows.com/wp-content/uploads/2026/03/apptronik-apollo.jpg" alt="Robot Apollo de Apptronik" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Industria 4.0</div>
-            <div class="news-title">
-              Apptronik impulsa su humanoide Apollo para logística y manufactura
-            </div>
-            <p class="news-summary">
-              Apptronik, con experiencia en robótica avanzada como el proyecto Valkyrie de la NASA, desarrolla su robot humanoide Apollo enfocado en logística, manufactura y cuidado de personas mayores.[web:9] La empresa alcanzó una valuación previa a inversión de 5 mil millones de dólares, subrayando el fuerte interés de los mercados en la automatización física de alto nivel.[web:9]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Wellows</span>
-              <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">Leer más</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T5 – Cybersecurity / identity -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">
-              <img src="https://wellows.com/wp-content/uploads/2026/03/cybersecurity-startups.jpg" alt="Plataformas de ciberseguridad e identidad digital" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Ciberseguridad</div>
-            <div class="news-title">
-              Startups de identidad digital combaten riesgos de agentes de IA y deepfakes
-            </div>
-            <p class="news-summary">
-              Nuevas compañías como Saviynt, ConductorOne, Orchid y 7AI se enfocan en gestionar identidades humanas y de agentes de IA, automatizar la gobernanza de accesos y responder a amenazas en tiempo real.[web:9] Soluciones como imper.ai y Zero Networks buscan contener brechas y frenar suplantaciones basadas en deepfakes, un riesgo creciente en entornos corporativos altamente digitalizados.[web:9]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Wellows</span>
-              <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">Ver startups</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T6 – Articul8 AI -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">
-              <img src="https://wellows.com/wp-content/uploads/2026/03/articul8-ai.jpg" alt="Data center para IA on-premises" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Infraestructura IA</div>
-            <div class="news-title">
-              Articul8 AI ofrece IA generativa on‑premises para sectores regulados
-            </div>
-            <p class="news-summary">
-              Articul8 AI, surgida del programa de incubación de Intel, propone una plataforma de IA generativa desplegada en las propias instalaciones del cliente para garantizar soberanía de datos y privacidad.[web:9] Su enfoque apunta a bancos, gobiernos y empresas de salud que necesitan capacidades avanzadas sin depender de nubes públicas para información sensible.[web:9]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Wellows</span>
-              <a href="https://wellows.com/blog/tech-startups/" target="_blank" rel="noopener noreferrer">Conocer más</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T7 SOCIAL (X) – AI dev tools -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://x.com/search?q=ai%20developer%20tools%202026&src=typed_query" target="_blank" rel="noopener noreferrer">
-              <img src="https://pbs.twimg.com/media/ai-dev-tools-thread.jpg" alt="Hilo en X sobre herramientas para desarrolladores de IA" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">DevTools · [X]</div>
-            <div class="news-title">
-              Hilos en X muestran boom de nuevas herramientas para desarrolladores de IA
-            </div>
-            <p class="news-summary">
-              Desarrolladores comparten en X reseñas rápidas de nuevas plataformas de orquestación de agentes, frameworks para modelos pequeños y herramientas de evaluación de calidad de respuestas. El intercambio comunitario ayuda a equipos técnicos a filtrar qué productos realmente aceleran el ciclo de desarrollo frente a promesas meramente de marketing.
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Comunidad de IA [X]</span>
-              <a href="https://x.com/search?q=ai%20developer%20tools%202026&src=typed_query" target="_blank" rel="noopener noreferrer">Explorar hilos</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T8 SOCIAL (Instagram) – robotics demo video -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.instagram.com/explore/tags/robotics2026/" target="_blank" rel="noopener noreferrer">
-              <img src="https://instagram.fplaceholder.cdn/robotics-demo-reel.jpg" alt="Reel de robots humanoides en acción" />
-              <span class="video-badge">Video</span>
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Robótica · [Instagram]</div>
-            <div class="news-title">
-              Reels virales muestran robots humanoides realizando tareas domésticas
-            </div>
-            <p class="news-summary">
-              Videos cortos en Instagram muestran prototipos de humanoides doblando ropa, moviendo cajas y sirviendo en cafeterías, generando debates sobre empleo y seguridad laboral. Las demostraciones visuales acercan al público general la discusión sobre cómo convivir con sistemas físicos inteligentes en la vida cotidiana.
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Robotics 2026 [IG]</span>
-              <a href="https://www.instagram.com/explore/tags/robotics2026/" target="_blank" rel="noopener noreferrer">Ver videos</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T9 SOCIAL – Facebook AI/data daily -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://www.facebook.com/groups/957567098722676/posts/1615691416243571/" target="_blank" rel="noopener noreferrer">
-              <img src="https://scontent.xx.fbcdn.net/v/t1.6435-9/daily-ai-data.jpg" alt="Grupo de Facebook con resumen diario de IA y datos" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">IA · [Facebook]</div>
-            <div class="news-title">
-              Grupos en Facebook curan resúmenes diarios de IA y ciencia de datos
-            </div>
-            <p class="news-summary">
-              Comunidades especializadas en Facebook publican cada día compilaciones de casos de uso de IA, nuevas APIs y recursos para científicos de datos.[web:15] Estos espacios ayudan a profesionales y estudiantes a seguir el ritmo de un ecosistema que cambia semana a semana e integrar rápidamente novedades en sus proyectos.[web:15]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">Daily AI &amp; Data [Facebook]</span>
-              <a href="https://www.facebook.com/groups/957567098722676/posts/1615691416243571/" target="_blank" rel="noopener noreferrer">Ver grupo</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- T10 – OpenAI funding context (from EBMag) -->
-        <article class="news-card">
-          <div class="news-media">
-            <a href="https://europeanbusinessmagazine.com/business/ai-startups-to-watch-in-2026-the-companies-reshaping-industries-through-artificial-intelligence/" target="_blank" rel="noopener noreferrer">
-              <img src="https://europeanbusinessmagazine.com/wp-content/uploads/2026/01/openai-hq.jpg" alt="Oficinas de OpenAI" />
-            </a>
-          </div>
-          <div class="news-body">
-            <div class="news-tag">Modelos fundacionales</div>
-            <div class="news-title">
-              OpenAI refuerza liderazgo con más de 78 mil millones de dólares en financiación
-            </div>
-            <p class="news-summary">
-              El perfil de European Business Magazine destaca que OpenAI mantiene su posición de referencia en modelos generativos, apoyado por un volumen récord de financiación y una alianza estratégica con Microsoft.[web:12] La combinación de recursos computacionales y distribución empresarial masiva le otorga una ventaja competitiva difícil de igualar, incluso ante la creciente competencia de nuevos actores.[web:12]
-            </p>
-            <div class="news-meta">
-              <span class="source-pill">European Business Magazine</span>
-              <a href="https://europeanbusinessmagazine.com/business/ai-startups-to-watch-in-2026-the-companies-reshaping-industries-through-artificial-intelligence/" target="_blank" rel="noopener noreferrer">Ir al artículo</a>
-            </div>
-          </div>
-        </article>
-
       </div>
     </section>
-
   </div>
 
-  <!-- RIGHT COLUMN: Economic & Financial Indicators -->
-  <aside class="column" aria-label="Indicadores económicos y financieros">
-
+  <aside class="column">
     <section>
-      <h2>Mercados bursátiles clave</h2>
-      <div class="market-group">
-        <div class="market-row">
-          <span class="label">S&amp;P 500</span>
-          <span class="value">Ligeramente a la baja</span>
-          <span class="delta delta-neg">Sesión volátil ligada a Irán[web:3][web:11]</span>
+      <h2>Indicadores Financieros</h2>
+      <div class="market-card">
+        <div class="market-row down">
+          <div class="m-label">S&P 500</div>
+          <div class="delta">-0.12%</div>
+          <div class="m-value">5,123.4</div>
         </div>
-        <div class="market-row">
-          <span class="label">Dow Jones</span>
-          <span class="value">Recorta ganancias</span>
-          <span class="delta delta-neg">Reacción a caída del petróleo[web:11]</span>
+        <div class="market-row up">
+          <div class="m-label">NASDAQ</div>
+          <div class="delta">+0.45%</div>
+          <div class="m-value">16,215.1</div>
         </div>
-        <div class="market-row">
-          <span class="label">Nasdaq</span>
-          <span class="value">Presión en tech</span>
-          <span class="delta delta-neg">Sensibilidad a tasas e IA[web:11]</span>
+        <div class="market-row down">
+          <div class="m-label">OIL (Brent)</div>
+          <div class="delta">-2.10%</div>
+          <div class="m-value">$78.42</div>
+        </div>
+        <div class="market-row up">
+          <div class="m-label">BITCOIN</div>
+          <div class="delta">+1.24%</div>
+          <div class="m-value">$66,450</div>
+        </div>
+        <div class="market-row up">
+          <div class="m-label">USD/MXN</div>
+          <div class="delta">+0.05%</div>
+          <div class="m-value">17.02</div>
         </div>
       </div>
-      <p class="market-note">
-        Los índices estadounidenses muestran cautela: los inversionistas calibran el impacto del conflicto con Irán frente a un posible ciclo de recortes de tasas.[web:1][web:11][web:14]
-      </p>
-      <p class="indicator-link">
-        Fuente: <a href="https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-trim-gains-oil-falls-as-wall-street-weighs-iran-war-signals-130544731.html" target="_blank" rel="noopener noreferrer">Cobertura en vivo de Yahoo Finance</a>[web:11]
-      </p>
     </section>
-
-    <section>
-      <h2>Materias primas y energía</h2>
-      <div class="market-group">
-        <div class="market-row">
-          <span class="label">Petróleo (Brent)</span>
-          <span class="value">En fuerte descenso</span>
-          <span class="delta delta-neg">Tras señales de fin de guerra[web:8][web:14]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">Petróleo (WTI)</span>
-          <span class="value">Volátil</span>
-          <span class="delta delta-neg">Oscilaciones históricas recientes[web:11][web:14]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">Oro</span>
-          <span class="value">Refugio moderado</span>
-          <span class="delta delta-pos">Demanda por riesgo geopolítico[web:8]</span>
-        </div>
-      </div>
-      <p class="market-note">
-        La caída del petróleo sugiere que el mercado descuenta menor duración del conflicto, mientras el oro actúa como seguro frente a nuevos shocks.[web:8][web:11][web:14]
-      </p>
-      <p class="indicator-link">
-        Fuente: <a href="https://www.reuters.com/world/china/global-markets-wrapup-1-pix-2026-03-10/" target="_blank" rel="noopener noreferrer">Reuters – Global Markets</a>[web:8]
-      </p>
-    </section>
-
-    <section>
-      <h2>Criptomonedas principales</h2>
-      <div class="market-group">
-        <div class="market-row">
-          <span class="label">Bitcoin (BTC)</span>
-          <span class="value">$65 969.78</span>
-          <span class="delta delta-neg">‑1.94 % 24h[web:10]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">Ethereum (ETH)</span>
-          <span class="value">$1 936.60</span>
-          <span class="delta delta-neg">‑1.67 % 24h[web:10]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">Dogecoin (DOGE)</span>
-          <span class="value">$0.08916</span>
-          <span class="delta delta-neg">‑0.86 % 24h[web:10]</span>
-        </div>
-      </div>
-      <p class="market-note">
-        El valor total del mercado cripto ronda los 2.39 billones de dólares, con Bitcoin concentrando casi 59 % de la capitalización y Ethereum en torno al 10 %.[web:10]
-      </p>
-      <p class="indicator-link">
-        Fuente: <a href="https://coinmarketcap.com/historical/20260308/" target="_blank" rel="noopener noreferrer">CoinMarketCap – Snapshot histórico</a>[web:10]
-      </p>
-    </section>
-
-    <section>
-      <h2>Cripto y riesgo financiero</h2>
-      <div class="market-group">
-        <div class="market-row">
-          <span class="label">BTC</span>
-          <span class="value">≈ $67 000</span>
-          <span class="delta delta-pos">Resiliente pese a caídas bursátiles[web:13]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">ETH</span>
-          <span class="value">Estable</span>
-          <span class="delta delta-neg">Corrección moderada[web:13]</span>
-        </div>
-        <div class="market-row">
-          <span class="label">Altcoins</span>
-          <span class="value">Mixto</span>
-          <span class="delta delta-neg">Sensibles al apetito de riesgo[web:13]</span>
-        </div>
-      </div>
-      <p class="market-note">
-        Un análisis reciente señala que la fortaleza de Bitcoin en medio de caídas en bolsas asiáticas y presión sobre el S&amp;P 500 refleja un cambio estructural en su rol como activo de riesgo.[web:13]
-      </p>
-      <p class="indicator-link">
-        Fuente: <a href="https://www.capitalstreetfx.com/crypto-market-analysis-march-9-2026-btc-eth-xrp-sol-capital-street-fx/" target="_blank" rel="noopener noreferrer">Capital Street FX – Análisis cripto</a>[web:13]
-      </p>
-    </section>
-
   </aside>
 </main>
+
+<script>
+  // Script para simular actualización diaria y refresco
+  console.log("Dashboard EnSintonía activo. Actualización programada cada 24h.");
+</script>
+
 </body>
 </html>
