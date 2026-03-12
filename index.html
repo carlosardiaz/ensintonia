@@ -1,341 +1,493 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>EnSintonía</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="86400">
-  <style>
-    :root {
-      --bg: #ffffff;
-      --accent: #111111;
-      --muted: #f4f4f4;
-      --border: #dddddd;
-      --text: #222222;
-      --secondary: #555555;
-      --highlight: #c0392b;
-      --pos: #0f7a43;
-      --neg: #b43221;
-      --card-shadow: 0 8px 18px rgba(0,0,0,0.06);
-    }
+    <meta charset="UTF-8" />
+    <title>EnSintonía</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="86400">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --accent: #111111;
+            --muted: #f9f9f9;
+            --border: #eeeeee;
+            --text: #1a1a1a;
+            --secondary: #666666;
+            --highlight: #c0392b;
+            --pos: #27ae60;
+            --neg: #e74c3c;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --yt: #ff0000;
+            --ig: #e1306c;
+            --x: #000000;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: "Georgia", serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      font-size: 18px;
-    }
+        body {
+            font-family: 'Lora', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 18px;
+        }
 
-    a { color: var(--highlight); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
 
-    /* Cintillo Superior */
-    .ticker-wrap {
-      width: 100%;
-      overflow: hidden;
-      background: var(--accent);
-      color: #fff;
-      padding: 12px 0;
-      font-size: 0.9rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .ticker {
-      display: flex;
-      white-space: nowrap;
-      animation: ticker 40s linear infinite;
-    }
-    .ticker-item { padding: 0 50px; border-right: 1px solid #444; font-weight: 700; }
-    @keyframes ticker {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: var(--accent);
+            color: white;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            font-size: 0.9rem;
+        }
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 40s linear infinite;
+        }
+        .ticker span { padding: 0 40px; }
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
 
-    header { padding: 40px 20px; border-bottom: 2px solid var(--accent); text-align: center; background: var(--bg); }
-    header h1 { font-size: 3rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
-    header p { font-size: 1rem; color: var(--secondary); letter-spacing: 0.1em; }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { font-size: 4rem; letter-spacing: 4px; text-transform: uppercase; }
+        header p { color: var(--secondary); font-style: italic; margin-top: 10px; }
 
-    main {
-      display: grid;
-      grid-template-columns: 1fr 260px; /* Barra lateral optimizada */
-      gap: 30px;
-      padding: 30px;
-      max-width: 1500px;
-      margin: 0 auto;
-    }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+            padding: 40px 20px;
+        }
 
-    .column { display: flex; flex-direction: column; gap: 40px; }
+        .section-title {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
 
-    section h2 {
-      font-size: 1.6rem;
-      margin-bottom: 25px;
-      border-left: 6px solid var(--accent);
-      padding-left: 15px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
 
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 25px;
-    }
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--card-shadow); }
+        
+        .card.featured { grid-column: span 2; flex-direction: row; }
+        .card.featured .card-img { width: 50%; height: auto; min-height: 300px; }
+        .card.featured .card-content { width: 50%; }
 
-    .news-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--card-shadow);
-      transition: transform 0.2s ease;
-    }
-    .news-card:hover { transform: translateY(-4px); }
-    .news-card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1.6fr 1fr; }
-    
-    .news-media { position: relative; width: 100%; background: #000; overflow: hidden; }
-    .news-media img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9; display: block; }
-    
-    .news-body { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
-    .news-title { font-size: 1.4rem; font-weight: 700; line-height: 1.25; }
-    .source-tag { font-size: 0.8rem; font-family: sans-serif; font-weight: 700; color: var(--secondary); text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
-    .source-tag::before { content: ""; width: 8px; height: 8px; background: var(--highlight); border-radius: 50%; }
+        .card-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            background: var(--muted);
+        }
 
-    /* Indicadores Estrechos y Elegantes */
-    .market-sidebar { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 80px; }
-    .market-item {
-      padding: 12px;
-      border-radius: 8px;
-      background: #fafafa;
-      border: 1px solid #eee;
-      font-size: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .market-item.up { border-left: 4px solid var(--pos); }
-    .market-item.down { border-left: 4px solid var(--neg); }
-    .m-name { font-weight: 700; color: var(--accent); }
-    .m-flex { display: flex; justify-content: space-between; align-items: baseline; }
-    .m-val { font-family: monospace; font-size: 1.1rem; font-weight: 700; }
-    .m-pct { font-weight: 700; font-size: 0.85rem; }
-    .up .m-pct { color: var(--pos); }
-    .down .m-pct { color: var(--neg); }
+        .card-content { padding: 25px; flex-grow: 1; }
+        .source-tag {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .source-tag.youtube { color: var(--yt); }
+        .source-tag.instagram { color: var(--ig); }
+        .source-tag.x { color: var(--x); }
 
-    @media (max-width: 1100px) {
-      main { grid-template-columns: 1fr; }
-      .news-card.featured { grid-template-columns: 1fr; }
-      .market-sidebar { position: static; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-    }
-  </style>
+        .card h3 { font-size: 1.5rem; margin-bottom: 15px; line-height: 1.2; }
+        .card p { font-size: 1rem; color: var(--secondary); margin-bottom: 20px; }
+        .card .btn {
+            text-decoration: none;
+            color: var(--highlight);
+            font-weight: bold;
+            font-size: 0.9rem;
+            border-bottom: 1px solid transparent;
+        }
+        .card .btn:hover { border-bottom: 1px solid var(--highlight); }
+
+        .market-sidebar {
+            background: var(--muted);
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+        .market-sidebar h2 { font-size: 1.2rem; margin-bottom: 20px; text-transform: uppercase; }
+        .market-item {
+            background: white;
+            border-left: 4px solid var(--secondary);
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .market-item.pos { border-left-color: var(--pos); }
+        .market-item.neg { border-left-color: var(--neg); }
+        .market-info .name { font-weight: bold; display: block; font-size: 0.85rem; }
+        .market-info .val { font-size: 0.8rem; color: var(--secondary); }
+        .market-change { text-align: right; font-weight: bold; font-size: 0.85rem; }
+
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; }
+            .card.featured { flex-direction: column; grid-column: auto; }
+            .card.featured .card-img, .card.featured .card-content { width: 100%; }
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.5rem; }
+            .news-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="ticker-wrap">
-  <div class="ticker">
-    <div class="ticker-item">🔴 EN VIVO: El Chapucero reporta que BRICS "sale al quite" ante amenazas de Trump a México.</div>
-    <div class="ticker-item">🌐 GEOPOLÍTICA: Putin advierte que Rusia resistirá cualquier ataque en discurso histórico.</div>
-    <div class="ticker-item">⚖️ MÉXICO: InfodemiaMX desmiente censura en redes por Reforma Electoral.</div>
-  </div>
-</div>
-
-<header>
-  <h1>EnSintonía</h1>
-  <p>Geopolítica • Economía • Análisis Crítico</p>
-</header>
-
-<main>
-  <div class="column">
-    <section>
-      <h2>Top 10 Noticias del Día</h2>
-      <div class="news-grid">
-        
-        <!-- 1: El Chapucero TODAY -->
-        <article class="news-card featured">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/n0XaYkoRbXI/maxresdefault.jpg" alt="El Chapucero TODAY">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">El Chapucero TODAY · YouTube</div>
-            <div class="news-title">Trump escala ataque a Rusia y amenaza a México; BRICS responde</div>
-            <p class="news-summary">Nacho Rodríguez reporta una escalada en la retórica de Donald Trump contra Moscú y nuevas presiones directas hacia el gobierno de México, mientras el bloque BRICS manifiesta su apoyo a la soberanía de los países aliados.[web:6]</p>
-            <a href="https://www.youtube.com/watch?v=n0XaYkoRbXI" target="_blank">Ver video</a>
-          </div>
-        </article>
-
-        <!-- 2: Los Periodistas -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/ueXqJbfBH5U/maxresdefault.jpg" alt="Los Periodistas">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Los Periodistas · Canal Once</div>
-            <div class="news-title">Bombardeos en Irán y operativo contra "El Mencho" sacuden la agenda</div>
-            <p class="news-summary">Álvaro Delgado y Alejandro Páez analizan el impacto de los ataques de EE. UU. e Israel en territorio iraní y la crisis de seguridad desatada tras la caída del líder del CJNG.[web:6]</p>
-            <a href="https://www.youtube.com/watch?v=ueXqJbfBH5U" target="_blank">Ver programa</a>
-          </div>
-        </article>
-
-        <!-- 3: Manuel Pedrero -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/brjGPAVb05g/maxresdefault.jpg" alt="Manuel Pedrero">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Manuel Pedrero · YouTube</div>
-            <div class="news-title">Alito amenaza a la prensa mientras se vota la Reforma Electoral</div>
-            <p class="news-summary">Manuel Pedrero denuncia intimidaciones por parte del dirigente del PRI en un contexto de alta tensión legislativa por los cambios al sistema electoral mexicano.[web:10]</p>
-            <a href="https://www.youtube.com/watch?v=brjGPAVb05g" target="_blank">Ver nota</a>
-          </div>
-        </article>
-
-        <!-- 4: InfodemiaMX -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/cw9G1GK5V0c/maxresdefault.jpg" alt="InfodemiaMX">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">InfodemiaMX · YouTube</div>
-            <div class="news-title">Mentira: La Reforma Electoral no censurará redes sociales</div>
-            <p class="news-summary">El detector de mentiras oficial expone la campaña de desinformación que busca generar pánico sobre una supuesta facultad del gobierno para eliminar contenido digital.[web:17]</p>
-            <a href="https://www.youtube.com/watch?v=cw9G1GK5V0c" target="_blank">Ver verificación</a>
-          </div>
-        </article>
-
-        <!-- 5: Canal Red Latam -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/rtFfztq1L7A/maxresdefault.jpg" alt="Canal Red">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Canal Red Latam · YouTube</div>
-            <div class="news-title">El Pacto Histórico consolida fuerza en el legislativo colombiano</div>
-            <p class="news-summary">Pablo Iglesias y Laura Arroyo analizan los resultados electorales en Colombia, donde la izquierda logra avances significativos frente a la presión de los sectores conservadores.[web:11]</p>
-            <a href="https://www.youtube.com/watch?v=rtFfztq1L7A" target="_blank">Ver análisis</a>
-          </div>
-        </article>
-
-        <!-- 6: Politica_Salvaje -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1540910419892-f0c74b0e53b3?auto=format&fit=crop&q=80&w=600" alt="Insta">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Politica_Salvaje · Instagram</div>
-            <div class="news-title">¿Austeridad en Morena? Los lujos cuestionados de la 4T</div>
-            <p class="news-summary">Un reel viral cuestiona los gastos de altos funcionarios en un momento donde la narrativa oficial insiste en la austeridad republicana.[web:34]</p>
-            <a href="https://www.instagram.com/politica_salvaje/" target="_blank">Ver reel</a>
-          </div>
-        </article>
-
-        <!-- 7: Geopolitik_2030 -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=600" alt="X">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Geopolitik_2030 · X</div>
-            <div class="news-title">Putin: "El mundo puede terminar antes, pero Rusia no caerá"</div>
-            <p class="news-summary">Análisis de los hilos de Geopolitik_2030 sobre el último discurso del mandatario ruso, sugiriendo una preparación para un conflicto de mayor escala.[web:15]</p>
-            <a href="https://x.com/Geopolitik_2030" target="_blank">Ver en X</a>
-          </div>
-        </article>
-
-        <!-- 8: AJ+ Español -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/PIyGg89tZog/maxresdefault.jpg" alt="AJ+">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">AJ+ Español · YouTube</div>
-            <div class="news-title">El plan de Irán para una guerra de larga duración</div>
-            <p class="news-summary">Documental corto sobre la estrategia de "defensa en mosaico" que implementa Teherán para resistir los embates tecnológicos de la coalición liderada por EE. UU.[web:44]</p>
-            <a href="https://www.youtube.com/watch?v=PIyGg89tZog" target="_blank">Ver reportaje</a>
-          </div>
-        </article>
-
-        <!-- 9: Canal 26 -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://img.youtube.com/vi/HzbSsGqoqeo/maxresdefault.jpg" alt="Canal 26">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Canal 26 · Geopolítica</div>
-            <div class="news-title">¿Entra Europa directamente en la guerra?</div>
-            <p class="news-summary">Debate sobre la posibilidad de que países europeos abandonen la neutralidad logística para involucrarse activamente en la defensa de sus intereses petroleros.[web:8]</p>
-            <a href="https://www.youtube.com/watch?v=HzbSsGqoqeo" target="_blank">Ver debate</a>
-          </div>
-        </article>
-
-        <!-- 10: La Jornada / Sputnik -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&q=80&w=600" alt="Sputnik">
-          </div>
-          <div class="news-body">
-            <div class="source-tag">Sputnik Mundo · Geopolítica</div>
-            <div class="news-title">Acuerdo Rusia-China: El adiós definitivo al petrodólar</div>
-            <p class="news-summary">Nuevos contratos energéticos firmados esta semana establecen el uso exclusivo de yuanes y rublos, marcando un punto de no retorno para la hegemonía financiera global.</p>
-            <a href="https://latam.sputniknews.com" target="_blank">Leer más</a>
-          </div>
-        </article>
-
-      </div>
-    </section>
-  </div>
-
-  <aside class="column market-sidebar">
-    <div class="market-item down">
-      <div class="m-name">S&P 500</div>
-      <div class="m-flex"><span class="m-val">5,123.4</span> <span class="m-pct">▼ 0.1%</span></div>
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span>🚨 ÚLTIMA HORA: FMI advierte contracción económica para México por aranceles de Trump.</span>
+            <span>📉 MERCADOS: Bitcoin cae mientras Wall Street espera datos de inflación.</span>
+            <span>🌍 GEOPOLÍTICA: Rusia y China consolidan el bloque del Sur Global frente al dólar.</span>
+            <span>💻 TECH: Huawei rompe el duopolio con 100 millones de dispositivos HarmonyOS.</span>
+        </div>
     </div>
-    <div class="market-item up">
-      <div class="m-name">NASDAQ</div>
-      <div class="m-flex"><span class="m-val">16,215</span> <span class="m-pct">▲ 0.4%</span></div>
+
+    <header>
+        <h1>EnSintonía</h1>
+        <p>Dashboard de Geopolítica, Economía Global y Tecnología</p>
+    </header>
+
+    <div class="container">
+        <main>
+            <h2 class="section-title">Top 10 Noticias</h2>
+            <div class="news-grid">
+                
+                <article class="card featured">
+                    <img src="https://img.youtube.com/vi/yOteywLcijI/maxresdefault.jpg" class="card-img" alt="El Chapucero">
+                    <div class="card-content">
+                        <div class="source-tag youtube">YouTube · El Chapucero [YouTube]</div>
+                        <h3>Agarrón histórico en la mañanera: Prensa bajo la lupa</h3>
+                        <p>Nacho Rodríguez analiza el intenso debate sobre el papel de los medios tradicionales en la nueva administración. Tras el "calladón" a reporteros, se discute si la prensa actúa de forma carroñera ante las decisiones soberanas del gobierno de México.</p>
+                        <a href="https://www.youtube.com/watch?v=yOteywLcijI" class="btn">Ver video completo</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://img.youtube.com/vi/snEKMAxqnC0/maxresdefault.jpg" class="card-img" alt="Manuel Pedrero">
+                    <div class="card-content">
+                        <div class="source-tag youtube">YouTube · Manuel Pedrero [YouTube]</div>
+                        <h3>Alito Moreno arremete contra medios independientes</h3>
+                        <p>El dirigente del PRI lanza una ofensiva legal y política contra comunicadores independientes. Manuel Pedrero responde con contundencia, exponiendo la crisis interna del bloque opositor frente al avance de la transformación.</p>
+                        <a href="https://www.youtube.com/watch?v=snEKMAxqnC0" class="btn">Ver respuesta</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://img.youtube.com/vi/o7dGJBcy4ek/maxresdefault.jpg" class="card-img" alt="Sin Censura">
+                    <div class="card-content">
+                        <div class="source-tag youtube">YouTube · Sin Censura [YouTube]</div>
+                        <h3>Vicente Serrano desenmascara a la élite periodística</h3>
+                        <p>En una cobertura sin precedentes, Sin Censura revela los hilos que mueven a los líderes de opinión tradicionales. Se defiende el derecho a informar desde plataformas digitales sin censura económica ni política.</p>
+                        <a href="https://www.youtube.com/watch?v=o7dGJBcy4ek" class="btn">Ver programa</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1553984840-b8cbc34f5215?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Geopolítica">
+                    <div class="card-content">
+                        <div class="source-tag x">X · Geopolitik_2030 [X]</div>
+                        <h3>El Sur Global desafía la hegemonía del dólar</h3>
+                        <p>Rusia y China avanzan en la creación de un sistema financiero multipolar. El bloque del Sur Global prioriza acuerdos en divisas locales para blindar sus economías ante presiones externas y sanciones comerciales.</p>
+                        <a href="https://x.com/Geopolitik_2030" class="btn">Ver en X</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://img.youtube.com/vi/ueXqJbfBH5U/maxresdefault.jpg" class="card-img" alt="Los Periodistas">
+                    <div class="card-content">
+                        <div class="source-tag youtube">YouTube · Los Periodistas [YouTube]</div>
+                        <h3>Geopolítica y Seguridad: De Irán a México</h3>
+                        <p>Álvaro Delgado y Alejandro Páez reportan una semana de alta tensión. Los bombardeos en Medio Oriente y los operativos tácticos en territorio mexicano redefinen la agenda de seguridad global en este inicio de 2025.</p>
+                        <a href="https://www.youtube.com/watch?v=ueXqJbfBH5U" class="btn">Ver análisis</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800" class="card-img" alt="AJ+">
+                    <div class="card-content">
+                        <div class="source-tag instagram">Instagram · AJ+ Español [Instagram]</div>
+                        <h3>Emergencia humanitaria: El costo de la guerra</h3>
+                        <p>Nuevos reportajes visuales desde las zonas de conflicto muestran la devastación civil. AJ+ documenta la lucha por la supervivencia en un entorno marcado por la escasez de recursos y el desplazamiento forzado.</p>
+                        <a href="https://www.youtube.com/c/ajpluselespanol" class="btn">Ver en Instagram</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1611974714024-463ef9c7456b?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Mercados">
+                    <div class="card-content">
+                        <div class="source-tag">Reuters · Mercados</div>
+                        <h3>Wall Street en vilo por tensiones comerciales</h3>
+                        <p>La posibilidad de una guerra de aranceles entre EE.UU. y sus principales socios mantiene la volatilidad en niveles máximos. Los inversores buscan refugio en activos tradicionales mientras el crudo muestra caídas significativas.</p>
+                        <a href="https://www.reuters.com/" class="btn">Leer más</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Economía">
+                    <div class="card-content">
+                        <div class="source-tag">El Economista · Pronósticos</div>
+                        <h3>FMI advierte riesgo de recesión para México</h3>
+                        <p>El organismo internacional recorta drásticamente las expectativas de crecimiento. Se anticipa una contracción del PIB debido al entorno externo hostil y la caída en la inversión extranjera directa.</p>
+                        <a href="https://www.eleconomista.com.mx/" class="btn">Ver reporte</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Finanzas">
+                    <div class="card-content">
+                        <div class="source-tag">El Financiero · Comercio</div>
+                        <h3>T-MEC: Incertidumbre en la renegociación</h3>
+                        <p>Las mesas de diálogo enfrentan obstáculos críticos en temas de energía y soberanía. México busca proteger sus intereses estratégicos frente a las demandas crecientes de sus socios comerciales del norte.</p>
+                        <a href="https://www.elfinanciero.com.mx/" class="btn">Nota completa</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Sputnik">
+                    <div class="card-content">
+                        <div class="source-tag">Sputnik Mundo · Alianzas</div>
+                        <h3>Pekín y Moscú: Alianza energética sin precedentes</h3>
+                        <p>Acuerdos estratégicos aseguran el suministro de gas y petróleo en divisas alternativas al dólar. Esta movida fortalece el eje euroasiático y redibuja el mapa del poder económico global.</p>
+                        <a href="https://latam.sputniknews.com/" class="btn">Ver más</a>
+                    </div>
+                </article>
+
+            </div>
+
+            <h2 class="section-title" style="margin-top: 60px;">Tecnología</h2>
+            <div class="news-grid">
+                
+                <article class="card featured">
+                    <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Huawei">
+                    <div class="card-content">
+                        <div class="source-tag">Xataka · Innovación</div>
+                        <h3>HarmonyOS: El fin de la dependencia de Android</h3>
+                        <p>Huawei alcanza un hito histórico con 100 millones de dispositivos funcionando bajo su ecosistema propio. La ruptura con el duopolio occidental marca un antes y un después en la soberanía tecnológica global.</p>
+                        <a href="https://www.xataka.com.mx/" class="btn">Detalles técnicos</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Futuro">
+                    <div class="card-content">
+                        <div class="source-tag">Xataka · Predicciones</div>
+                        <h3>¿Adiós al smartphone? Tatuajes electrónicos</h3>
+                        <p>Bill Gates apuesta por los tatuajes electrónicos como la próxima gran interfaz humana. Estos dispositivos invisibles monitorizarán la salud y permitirán la comunicación sin necesidad de pantallas físicas.</p>
+                        <a href="https://www.xatakamovil.com/" class="btn">Leer más</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Alibaba">
+                    <div class="card-content">
+                        <div class="source-tag">Forbes · Inteligencia Artificial</div>
+                        <h3>Qwen2.5-Omni: La IA que lo procesa todo</h3>
+                        <p>Alibaba Cloud revoluciona el mercado con un modelo multimodal capaz de entender audio, video y texto de forma simultánea, acercando la IA a un nivel de interacción casi humano.</p>
+                        <a href="https://www.forbes.com/" class="btn">Ver capacidades</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1684188157993-9097e3352697?auto=format&fit=crop&q=80&w=800" class="card-img" alt="OpenAI">
+                    <div class="card-content">
+                        <div class="source-tag">The Verge · Software</div>
+                        <h3>GPT-4o: Imágenes más reales que nunca</h3>
+                        <p>OpenAI integra su modelo de imagen más avanzado directamente en ChatGPT. La coherencia espacial y el detalle en las texturas marcan un nuevo estándar para la inteligencia artificial generativa.</p>
+                        <a href="https://www.theverge.com/" class="btn">Ejemplos</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Google">
+                    <div class="card-content">
+                        <div class="source-tag">Google · AI</div>
+                        <h3>Gemini 2.5: Inteligencia local y privada</h3>
+                        <p>Google permite que su IA más potente corra localmente en hardware personal. Esta movida prioriza la privacidad del usuario y reduce la latencia en aplicaciones de productividad crítica.</p>
+                        <a href="https://blog.google/" class="btn">Anuncio oficial</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Microsoft">
+                    <div class="card-content">
+                        <div class="source-tag">The Street · Trabajo</div>
+                        <h3>Microsoft Copilot: Deep Research para todos</h3>
+                        <p>La nueva función de búsqueda profunda permite a los profesionales automatizar días de investigación en minutos, cruzando datos de la web y documentos corporativos de forma segura.</p>
+                        <a href="https://www.thestreet.com/" class="btn">Más detalles</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Premios">
+                    <div class="card-content">
+                        <div class="source-tag">Xataka México · Tecnología</div>
+                        <h3>Premios Xataka 2025: Lo mejor del año</h3>
+                        <p>Se anuncian los ganadores a la mejor tecnología en México. Desde smartphones con carga ultrarrápida hasta las innovaciones más destacadas en movilidad sustentable.</p>
+                        <a href="https://www.xataka.com.mx/" class="btn">Ver ganadores</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Nvidia">
+                    <div class="card-content">
+                        <div class="source-tag">Yahoo Finance · Hardware</div>
+                        <h3>Blackwell Ultra: El motor de la IA mundial</h3>
+                        <p>Nvidia presenta sus chips de nueva generación capaces de entrenar modelos de IA diez veces más rápido que sus predecesores, asegurando su liderazgo en la carrera tecnológica.</p>
+                        <a href="https://finance.yahoo.com/" class="btn">Análisis</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=800" class="card-img" alt="SpaceX">
+                    <div class="card-content">
+                        <div class="source-tag">SpaceX · Espacio</div>
+                        <h3>Starship: El primer éxito comercial orbital</h3>
+                        <p>SpaceX logra aterrizar la etapa superior de Starship tras una misión comercial exitosa. Este avance reduce drásticamente el costo de poner carga pesada en órbita terrestre.</p>
+                        <a href="https://www.spacex.com/" class="btn">Ver video</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Tesla">
+                    <div class="card-content">
+                        <div class="source-tag">Tesla · Robótica</div>
+                        <h3>Optimus Gen 3: La revolución laboral</h3>
+                        <p>El humanoide de Tesla comienza pruebas reales en fábricas, demostrando que la integración de la robótica autónoma es inminente para transformar la manufactura global.</p>
+                        <a href="https://www.tesla.com/" class="btn">Ver acción</a>
+                    </div>
+                </article>
+
+            </div>
+        </main>
+
+        <aside class="market-sidebar">
+            <h2>Mercados</h2>
+            
+            <div class="market-item neg">
+                <div class="market-info">
+                    <span class="name">S&P 500</span>
+                    <span class="val">5,123.4</span>
+                </div>
+                <div class="market-change">▼ 0.12%</div>
+            </div>
+
+            <div class="market-item pos">
+                <div class="market-info">
+                    <span class="name">NASDAQ</span>
+                    <span class="val">16,215.1</span>
+                </div>
+                <div class="market-change">▲ 0.45%</div>
+            </div>
+
+            <div class="market-item neg">
+                <div class="market-info">
+                    <span class="name">DOW JONES</span>
+                    <span class="val">38,920.0</span>
+                </div>
+                <div class="market-change">▼ 0.08%</div>
+            </div>
+
+            <div class="market-item neg">
+                <div class="market-info">
+                    <span class="name">PETRÓLEO</span>
+                    <span class="val">Brent: $78.42</span>
+                </div>
+                <div class="market-change">▼ 2.1%</div>
+            </div>
+
+            <div class="market-item pos">
+                <div class="market-info">
+                    <span class="name">ORO</span>
+                    <span class="val">Spot: $2,165.2</span>
+                </div>
+                <div class="market-change">▲ 0.3%</div>
+            </div>
+
+            <div class="market-item neg">
+                <div class="market-info">
+                    <span class="name">BITCOIN</span>
+                    <span class="val">$65,969</span>
+                </div>
+                <div class="market-change">▼ 1.9%</div>
+            </div>
+
+            <div class="market-item pos">
+                <div class="market-info">
+                    <span class="name">ETHEREUM</span>
+                    <span class="val">$3,542.1</span>
+                </div>
+                <div class="market-change">▲ 0.8%</div>
+            </div>
+
+            <div class="market-item pos">
+                <div class="market-info">
+                    <span class="name">USD/MXN</span>
+                    <span class="val">Peso: 17.02</span>
+                </div>
+                <div class="market-change">▲ 0.05%</div>
+            </div>
+
+            <div class="market-item neg">
+                <div class="market-info">
+                    <span class="name">EUR/USD</span>
+                    <span class="val">Euro: 1.0820</span>
+                </div>
+                <div class="market-change">▼ 0.15%</div>
+            </div>
+
+            <div class="market-item pos">
+                <div class="market-info">
+                    <span class="name">TESLA (TSLA)</span>
+                    <span class="val">$182.50</span>
+                </div>
+                <div class="market-change">▲ 1.2%</div>
+            </div>
+
+        </aside>
     </div>
-    <div class="market-item down">
-      <div class="m-name">OIL BRENT</div>
-      <div class="m-flex"><span class="m-val">$78.42</span> <span class="m-pct">▼ 2.1%</span></div>
-    </div>
-    <div class="market-item up">
-      <div class="m-name">ORO SPOT</div>
-      <div class="m-flex"><span class="m-val">$2,165</span> <span class="m-pct">▲ 0.3%</span></div>
-    </div>
-    <div class="market-item down">
-      <div class="m-name">BITCOIN</div>
-      <div class="m-flex"><span class="m-val">$65,969</span> <span class="m-pct">▼ 1.9%</span></div>
-    </div>
-    <div class="market-item up">
-      <div class="m-name">ETHEREUM</div>
-      <div class="m-flex"><span class="m-val">$3,542</span> <span class="m-pct">▲ 0.8%</span></div>
-    </div>
-    <div class="market-item up">
-      <div class="m-name">USD/MXN</div>
-      <div class="m-flex"><span class="m-val">17.02</span> <span class="m-pct">▲ 0.0%</span></div>
-    </div>
-    <div class="market-item down">
-      <div class="m-name">EUR/USD</div>
-      <div class="m-flex"><span class="m-val">1.0820</span> <span class="m-pct">▼ 0.1%</span></div>
-    </div>
-    <div class="market-item up">
-      <div class="m-name">IPC (MEX)</div>
-      <div class="m-flex"><span class="m-val">55,420</span> <span class="m-pct">▲ 0.2%</span></div>
-    </div>
-    <div class="market-item up">
-      <div class="m-name">SOLANA</div>
-      <div class="m-flex"><span class="m-val">$142.1</span> <span class="m-pct">▲ 1.5%</span></div>
-    </div>
-    <div class="market-item down">
-      <div class="m-name">GAS NAT</div>
-      <div class="m-flex"><span class="m-val">1.82</span> <span class="m-pct">▼ 3.2%</span></div>
-    </div>
-  </aside>
-</main>
+
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--secondary); font-size: 0.8rem;">
+        &copy; 2025 EnSintonía. Todos los derechos reservados. Fuentes: YouTube, Instagram, X, Reuters, El Financiero, Xataka.
+    </footer>
 
 </body>
 </html>
