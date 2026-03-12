@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>EnSintonía</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="86400"> <!-- Refresco automático cada 24 horas -->
+  <meta http-equiv="refresh" content="86400">
   <style>
     :root {
       --bg: #ffffff;
@@ -19,183 +19,123 @@
       --card-shadow: 0 8px 18px rgba(0,0,0,0.06);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "Georgia", "Times New Roman", serif;
+      font-family: "Georgia", serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      font-size: 18px; /* Aumentado 2 puntos (+11% aprox) */
+      font-size: 18px;
     }
 
-    a {
-      color: var(--highlight);
-      text-decoration: none;
+    a { color: var(--highlight); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Cintillo Superior */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 0;
+      font-size: 0.9rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker 30s linear infinite;
+    }
+    .ticker-item { padding: 0 40px; border-right: 1px solid #444; }
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
     }
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    header {
-      padding: 20px;
-      border-bottom: 2px solid var(--accent);
-      background: var(--bg);
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.2rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
+    header { padding: 30px; border-bottom: 2px solid var(--accent); text-align: center; }
+    header h1 { font-size: 2.5rem; letter-spacing: 0.15em; text-transform: uppercase; }
 
     main {
       display: grid;
-      grid-template-columns: 2fr 1.1fr;
-      gap: 24px;
+      grid-template-columns: 1fr 280px; /* Barra lateral más angosta */
+      gap: 30px;
       padding: 20px;
       max-width: 1400px;
       margin: 0 auto;
     }
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    section {
-      background: var(--bg);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 20px;
-      box-shadow: var(--card-shadow);
-    }
+    .column { display: flex; flex-direction: column; gap: 30px; }
 
     section h2 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      border-left: 4px solid var(--accent);
-      padding-left: 10px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--accent);
+      padding-left: 15px;
+      text-transform: uppercase;
     }
 
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
     }
 
     .news-card {
-      display: flex;
-      flex-direction: column;
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--muted);
-      border: 1px solid #e7e7e7;
-    }
-
-    .news-card.large {
-      grid-column: span 2;
-    }
-
-    .news-media {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%; /* 16:9 */
-      overflow: hidden;
-      background: #eee;
-    }
-
-    .news-media img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .news-card:hover .news-media img {
-      transform: scale(1.03);
-    }
-
-    .video-badge {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      font-family: sans-serif;
-    }
-
-    .news-body {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .news-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .news-summary {
-      font-size: 1rem;
-      color: var(--secondary);
-    }
-
-    /* Indicadores Estilo Bolsa */
-    .market-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .market-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 15px;
+      background: var(--bg);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: #f8f9fa;
-      border-left: 6px solid #ccc;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--card-shadow);
     }
+    .news-card.large { grid-column: 1 / -1; display: grid; grid-template-columns: 1.5fr 1fr; }
+    
+    .news-media { position: relative; width: 100%; background: #000; overflow: hidden; }
+    .news-media img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9; }
+    
+    .news-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .news-title { font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
+    .source-tag { font-size: 0.75rem; font-family: sans-serif; color: var(--secondary); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
 
-    .market-row.up { border-left-color: var(--pos); background: #f0fdf4; }
-    .market-row.down { border-left-color: var(--neg); background: #fef2f2; }
-
-    .m-label { font-weight: 700; font-size: 0.95rem; }
-    .m-value { font-family: monospace; font-size: 1.1rem; }
-    .m-graph { width: 60px; height: 30px; }
-
-    .delta { font-weight: 700; font-size: 0.9rem; }
-    .up .delta { color: var(--pos); }
-    .down .delta { color: var(--neg); }
+    /* Indicadores Optimizados */
+    .market-sidebar { display: flex; flex-direction: column; gap: 15px; }
+    .market-item {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .market-item.up { background: #f0fdf4; border-left: 4px solid var(--pos); }
+    .market-item.down { background: #fef2f2; border-left: 4px solid var(--neg); }
+    .m-header { display: flex; justify-content: space-between; font-weight: 700; }
+    .m-data { display: flex; justify-content: space-between; font-family: monospace; font-size: 1rem; }
 
     @media (max-width: 1000px) {
       main { grid-template-columns: 1fr; }
-      .news-card.large { grid-column: span 1; }
+      .news-card.large { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">🚨 ÚLTIMA HORA: Estados Unidos e Israel bombardean Irán por segundo día consecutivo.</div>
+    <div class="ticker-item">📉 ECONOMÍA: Petróleo cae tras señales de posible fin de la guerra en Medio Oriente.</div>
+    <div class="ticker-item">⚖️ MÉXICO: PRIAN acusa a AMLO de querer "venezolanizar" al país tras alianzas internacionales.</div>
+  </div>
+</div>
+
 <header>
   <h1>EnSintonía</h1>
-  <p>Noticias y Mercados en Tiempo Real</p>
+  <p>Dashboard de Geopolítica y Economía Global</p>
 </header>
 
 <main>
@@ -203,110 +143,181 @@
     <section>
       <h2>Top 10 Noticias del Día</h2>
       <div class="news-grid">
-        <!-- 1 -->
+        <!-- 1: Los Periodistas -->
         <article class="news-card large">
           <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1611974714024-462cd99bc36a?auto=format&fit=crop&q=80&w=1000" alt="Mercados">
-            <span class="video-badge">Video</span>
+            <img src="https://img.youtube.com/vi/ueXqJbfBH5U/maxresdefault.jpg" alt="Los Periodistas">
           </div>
           <div class="news-body">
-            <div class="news-title">Mercados se relajan mientras Trump señala fin de guerra</div>
-            <p class="news-summary">Los mercados financieros muestran alivio tras señales de desescalada. El optimismo se extiende por Wall Street ante la posibilidad de un cierre diplomático.[web:5]</p>
-            <a href="https://www.youtube.com/watch?v=SNpreKLinFM" target="_blank">Fuente [YouTube]</a>
+            <div class="source-tag">Los Periodistas · YouTube</div>
+            <div class="news-title">EE. UU. e Israel bombardean Irán tras la caída de "El Mencho"</div>
+            <p class="news-summary">Álvaro Delgado y Alejandro Páez reportan una semana intensa marcada por el bombardeo a Irán por segundo día consecutivo y el operativo contra Nemesio Oseguera Cervantes, alias 'El Mencho', líder del CJNG.[web:6]</p>
+            <a href="https://www.youtube.com/watch?v=ueXqJbfBH5U" target="_blank">Ver video completo</a>
           </div>
         </article>
-        <!-- 2 -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=600" alt="Economía">
-          </div>
-          <div class="news-body">
-            <div class="news-title">El petróleo cae tras jornada de alta volatilidad</div>
-            <p class="news-summary">La corrección en los precios de la energía alivia la presión inflacionaria. Inversionistas ajustan posiciones tras semanas de incertidumbre.[web:14]</p>
-            <a href="https://www.nytimes.com/2026/03/10/business/stocks-oil-markets-iran.html" target="_blank">Fuente: NYT</a>
-          </div>
-        </article>
-        <!-- 3 -->
-        <article class="news-card">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600" alt="Bolsa">
-          </div>
-          <div class="news-body">
-            <div class="news-title">Wall Street se mantiene estable en espera de señales</div>
-            <p class="news-summary">Los índices principales cierran planos. La cautela predomina entre los operadores antes de los anuncios de la Reserva Federal.[web:1]</p>
-            <a href="https://www.latimes.com/business/story/2026-03-10/stocks-hold-steady" target="_blank">Fuente: LA Times</a>
-          </div>
-        </article>
-      </div>
-    </section>
 
-    <section>
-      <h2>Top 10 Tech News</h2>
-      <div class="news-grid">
-        <!-- T1 -->
-        <article class="news-card large">
-          <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000" alt="IA">
-          </div>
-          <div class="news-body">
-            <div class="news-title">Lanzamientos de productos IA para startups en 2026</div>
-            <p class="news-summary">Nuevas herramientas de automatización agentic prometen revolucionar la productividad en pequeñas empresas.[web:6]</p>
-            <a href="https://blog.mean.ceo/ai-product-launches-2026/" target="_blank">Fuente: Mean CEO</a>
-          </div>
-        </article>
-        <!-- T2 -->
+        <!-- 2: Diego Ruzzarin -->
         <article class="news-card">
           <div class="news-media">
-            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=600" alt="Robótica">
+            <img src="https://img.youtube.com/vi/V_kfSvXq2BM/maxresdefault.jpg" alt="Diego Ruzzarin">
           </div>
           <div class="news-body">
-            <div class="news-title">1X abre preventa de humanoide NEO</div>
-            <p class="news-summary">El robot diseñado para el hogar marca un hito en la robótica de consumo con un precio competitivo.[web:9]</p>
-            <a href="https://wellows.com/blog/tech-startups/" target="_blank">Fuente: Wellows</a>
+            <div class="source-tag">Diego Ruzzarin · Capital Humano</div>
+            <div class="news-title">La sociedad del espectáculo y el nuevo orden global</div>
+            <p class="news-summary">Ruzzarin analiza cómo los eventos geopolíticos se consumen como entretenimiento masivo, mientras las estructuras de poder real se reconfiguran ante el caos actual.[web:2]</p>
+            <a href="https://www.youtube.com/watch?v=V_kfSvXq2BM" target="_blank">Ver análisis</a>
+          </div>
+        </article>
+
+        <!-- 3: Los Reporteros MX -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://pbs.twimg.com/media/GE_v-0BWAAA8f9x?format=jpg&name=large" alt="Los Reporteros MX">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">Los Reporteros MX · X</div>
+            <div class="news-title">Oposición acusa "venezolanización" de México</div>
+            <p class="news-summary">El bloque PRIAN lanza ataques contra el expresidente AMLO alegando planes para replicar el modelo venezolano, mientras se revelan alianzas con opositores extranjeros.[web:3]</p>
+            <a href="https://x.com/ReporterosMX_" target="_blank">Ir a la fuente</a>
+          </div>
+        </article>
+
+        <!-- 4: Geopolitik_2030 -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://pbs.twimg.com/media/GJ9A-bBXEAA_v-0?format=jpg&name=large" alt="Geopolitik_2030">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">Geopolitik_2030 · X</div>
+            <div class="news-title">Putin advierte: "Rusia nunca caerá" ante amenazas externas</div>
+            <p class="news-summary">En un discurso reciente, Vladimir Putin señaló que el mundo podría terminar pronto, pero asegura que Rusia resistirá cualquier intento de agresión directa.[web:15]</p>
+            <a href="https://x.com/Geopolitik_2030" target="_blank">Ver hilo</a>
+          </div>
+        </article>
+
+        <!-- 5: Reuters -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://www.reuters.com/resizer/v2/https%3A%2F%2Fcloudfront-us-east-2.images.arcpublishing.com%2Freuters%2FABC123.jpg?auth=sha256&width=800" alt="Reuters">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">Reuters · Mercados</div>
+            <div class="news-title">Acciones globales suben y crudo se desploma</div>
+            <p class="news-summary">Las bolsas mundiales muestran recuperación mientras el precio del petróleo retrocede tras las declaraciones de Trump sugiriendo un final cercano a la guerra.[web:6]</p>
+            <a href="https://www.reuters.com/world/china/global-markets-2026-03-10/" target="_blank">Nota completa</a>
+          </div>
+        </article>
+
+        <!-- 6: DW Español -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://static.dw.com/image/68400000_6.jpg" alt="DW">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">DW Español · Internacional</div>
+            <div class="news-title">Impacto de las sanciones en la economía de Cuba</div>
+            <p class="news-summary">El endurecimiento del entorno externo y las sanciones de EE. UU. agravan los problemas energéticos y productivos en la isla, según analistas internacionales.[web:13]</p>
+            <a href="https://www.dw.com/es/noticias/" target="_blank">Ver más</a>
+          </div>
+        </article>
+
+        <!-- 7: El Financiero -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://www.elfinanciero.com.mx/resizer/v2/ABC123DEF.jpg?auth=sha256&width=800" alt="El Financiero">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">El Financiero · Economía</div>
+            <div class="news-title">Negociaciones del tratado comercial entran en fase crítica</div>
+            <p class="news-summary">México enfrenta una mesa de negociación compleja en el plano comercial, con figuras clave de la 4T buscando acuerdos estratégicos ante la presión externa.[web:6]</p>
+            <a href="https://www.elfinanciero.com.mx" target="_blank">Ir al sitio</a>
+          </div>
+        </article>
+
+        <!-- 8: AJ+ Español -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://images.unsplash.com/photo-1543269664-56d93c1b41a6?auto=format&fit=crop&q=80&w=600" alt="AJ+">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">AJ+ Español · Derechos Humanos</div>
+            <div class="news-title">Crisis humanitaria en Medio Oriente se profundiza</div>
+            <p class="news-summary">Nuevos desplazamientos masivos se registran tras la intensificación de las campañas militares, mientras organismos internacionales alertan sobre el colapso de servicios básicos.</p>
+            <a href="https://www.youtube.com/c/ajpluselespanol" target="_blank">Ver reportaje</a>
+          </div>
+        </article>
+
+        <!-- 9: Canal 26 -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Canal 26">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">Canal 26 · Geopolítica</div>
+            <div class="news-title">China redirige esfuerzos a IA y Robótica ante entorno hostil</div>
+            <p class="news-summary">A pesar de un superávit récord, el gigante asiático prioriza las "nuevas fuerzas productivas" para mitigar la hostilidad de los mercados occidentales.[web:13]</p>
+            <a href="https://www.youtube.com/c/canal26" target="_blank">Seguir señal</a>
+          </div>
+        </article>
+
+        <!-- 10: Sputnik / RT -->
+        <article class="news-card">
+          <div class="news-media">
+            <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&q=80&w=600" alt="Sputnik">
+          </div>
+          <div class="news-body">
+            <div class="source-tag">Sputnik Mundo · Internacional</div>
+            <div class="news-title">Nuevas rutas comerciales: La apuesta por el sur global</div>
+            <p class="news-summary">Moscú y Pekín consolidan acuerdos para fortalecer el comercio en divisas locales, desafiando la hegemonía del dólar en las transacciones energéticas.</p>
+            <a href="https://latam.sputniknews.com" target="_blank">Fuente Sputnik</a>
           </div>
         </article>
       </div>
     </section>
   </div>
 
-  <aside class="column">
+  <aside class="column market-sidebar">
     <section>
-      <h2>Indicadores Financieros</h2>
-      <div class="market-card">
-        <div class="market-row down">
-          <div class="m-label">S&P 500</div>
-          <div class="delta">-0.12%</div>
-          <div class="m-value">5,123.4</div>
-        </div>
-        <div class="market-row up">
-          <div class="m-label">NASDAQ</div>
-          <div class="delta">+0.45%</div>
-          <div class="m-value">16,215.1</div>
-        </div>
-        <div class="market-row down">
-          <div class="m-label">OIL (Brent)</div>
-          <div class="delta">-2.10%</div>
-          <div class="m-value">$78.42</div>
-        </div>
-        <div class="market-row up">
-          <div class="m-label">BITCOIN</div>
-          <div class="delta">+1.24%</div>
-          <div class="m-value">$66,450</div>
-        </div>
-        <div class="market-row up">
-          <div class="m-label">USD/MXN</div>
-          <div class="delta">+0.05%</div>
-          <div class="m-value">17.02</div>
-        </div>
+      <h2>Mercados</h2>
+      <div class="market-item down">
+        <div class="m-header"><span>S&P 500</span> <span class="delta">▼ 0.12%</span></div>
+        <div class="m-data"><span>Precio</span> <span>5,123.4</span></div>
+      </div>
+      <div class="market-item up">
+        <div class="m-header"><span>NASDAQ</span> <span class="delta">▲ 0.45%</span></div>
+        <div class="m-data"><span>Precio</span> <span>16,215.1</span></div>
+      </div>
+      <div class="market-item down">
+        <div class="m-header"><span>DOW JONES</span> <span class="delta">▼ 0.08%</span></div>
+        <div class="m-data"><span>Precio</span> <span>38,920.0</span></div>
+      </div>
+      <div class="market-item down">
+        <div class="m-header"><span>PETRÓLEO</span> <span class="delta">▼ 2.1%</span></div>
+        <div class="m-data"><span>Brent</span> <span>$78.42</span></div>
+      </div>
+      <div class="market-item up">
+        <div class="m-header"><span>ORO</span> <span class="delta">▲ 0.3%</span></div>
+        <div class="m-data"><span>Spot</span> <span>$2,165.2</span></div>
+      </div>
+      <div class="market-item down">
+        <div class="m-header"><span>BITCOIN</span> <span class="delta">▼ 1.9%</span></div>
+        <div class="m-data"><span>BTC</span> <span>$65,969</span></div>
+      </div>
+      <div class="market-item up">
+        <div class="m-header"><span>ETHEREUM</span> <span class="delta">▲ 0.8%</span></div>
+        <div class="m-data"><span>ETH</span> <span>$3,542.1</span></div>
+      </div>
+      <div class="market-item up">
+        <div class="m-header"><span>USD/MXN</span> <span class="delta">▲ 0.05%</span></div>
+        <div class="m-data"><span>Peso</span> <span>17.02</span></div>
+      </div>
+      <div class="market-item down">
+        <div class="m-header"><span>EUR/USD</span> <span class="delta">▼ 0.15%</span></div>
+        <div class="m-data"><span>Euro</span> <span>1.0820</span></div>
       </div>
     </section>
   </aside>
 </main>
-
-<script>
-  // Script para simular actualización diaria y refresco
-  console.log("Dashboard EnSintonía activo. Actualización programada cada 24h.");
-</script>
 
 </body>
 </html>
